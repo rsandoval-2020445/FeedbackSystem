@@ -1,0 +1,146 @@
+{
+	"info": {
+		"_postman_id": "d721002d-0f7e-48ba-a283-a7826a4d6aba",
+		"name": "FeedbackSystem",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37951952"
+	},
+	"item": [
+		{
+			"name": "registerClient",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Raul",
+							"type": "text"
+						},
+						{
+							"key": "surname",
+							"value": "Del Cid",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "rdelcid",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "rdelcid@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Password123!",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "40918656",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "ADMIN",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3626/api/auth/register",
+					"host": [
+						"localhost"
+					],
+					"port": "3626",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "authLogin",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"postman.setGlobalVariable(\"token\", data.token)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "superadmin@example.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "SuperAdmin123!",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3626/api/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3626",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

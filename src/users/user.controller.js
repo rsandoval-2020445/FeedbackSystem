@@ -26,7 +26,7 @@ export const getUserById = async (req, res) => {
   }
 }
 
-// Actualizar usuario (ADMIN solo clientes y a sí mismo, CLIENT solo a sí mismo, sin password)
+// Actualizar usuario
 export const updateUser = async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -39,16 +39,8 @@ export const updateUser = async (req, res) => {
       return res.status(400).json({ message: "Use the change password function" })
     }
 
-    if (req.user.role === "ADMIN" && user.role === "ADMIN" && req.user._id.toString() !== req.params.id) {
-      return res.status(403).json({ message: "Admins cannot update other admins" })
-    }
-
-    if (req.user.role === "ADMIN" && user.role !== "CLIENT" && req.user._id.toString() !== req.params.id) {
-      return res.status(403).json({ message: "Admins can only update clients or themselves" })
-    }
-
-    if (req.user.role === "CLIENT" && req.user._id.toString() !== req.params.id) {
-      return res.status(403).json({ message: "Clients can only update themselves" })
+    if (user.role === "SUPERADMIN") {
+      return res.status(403).json({ message: "SuperAdmin cannot be modified" })
     }
 
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, select: "-password" })
@@ -58,22 +50,20 @@ export const updateUser = async (req, res) => {
   }
 }
 
-// Actualizar contraseña (Cliente solo a sí mismo, ADMIN no puede cambiar contraseñas de otros)
+// Actualizar contraseña
 export const updatePassword = async (req, res) => {
   try {
-    if (req.user.role === "ADMIN" && req.user._id.toString() !== req.params.id) {
-      return res.status(403).json({ message: "Admins cannot change other users' passwords" })
-    }
-
     const { oldPassword, newPassword } = req.body
     const user = await User.findById(req.user._id)
     if (!user) return res.status(404).json({ message: "User not found" })
 
-    // Usar checkPassword de Argon2 en lugar de bcrypt.compare()
+    if (user.role === "SUPERADMIN" && req.user._id.toString() !== req.params.id) {
+      return res.status(403).json({ message: "SuperAdmin password cannot be changed by others" })
+    }
+
     const isMatch = await checkPassword(user.password, oldPassword)
     if (!isMatch) return res.status(400).json({ message: "Incorrect old password" })
 
-    // Encriptar la nueva contraseña con encrypt (Argon2)
     user.password = await encrypt(newPassword)
     await user.save()
 
@@ -83,7 +73,7 @@ export const updatePassword = async (req, res) => {
   }
 }
 
-// Eliminar usuario (ADMIN solo clientes y a sí mismo, CLIENT solo a sí mismo)
+// Eliminar usuario
 export const deleteUser = async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -92,16 +82,8 @@ export const deleteUser = async (req, res) => {
     const user = await User.findById(req.params.id)
     if (!user) return res.status(404).json({ message: "User not found" })
 
-    if (req.user.role === "ADMIN" && user.role === "ADMIN" && req.user._id.toString() !== req.params.id) {
-      return res.status(403).json({ message: "Admins cannot delete other admins" })
-    }
-
-    if (req.user.role === "ADMIN" && user.role !== "CLIENT" && req.user._id.toString() !== req.params.id) {
-      return res.status(403).json({ message: "Admins can only delete clients or themselves" })
-    }
-
-    if (req.user.role === "CLIENT" && req.user._id.toString() !== req.params.id) {
-      return res.status(403).json({ message: "Clients can only delete themselves" })
+    if (user.role === "SUPERADMIN") {
+      return res.status(403).json({ message: "SuperAdmin cannot be deleted" })
     }
 
     await User.findByIdAndDelete(req.params.id)
