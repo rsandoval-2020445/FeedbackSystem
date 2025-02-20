@@ -1,30 +1,29 @@
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import User from '../users/user.model.js'
-import { encrypt, checkPassword } from '../../utils/encrypt.js'
+import User from "../users/user.model.js"
+import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
 
-// Registro de usuario
-export const register = async (req, res) => {
-    try {
-      const { name, surname, username, email, password, phone, role } = req.body
-  
-      // Verificar si el usuario ya existe
-      const existingUser = await User.findOne({ $or: [{ email }, { username }] })
-      if (existingUser) return res.status(400).json({ message: "User already exists" })
-  
-      // Hashear la contraseña
-      const hashedPassword = await encrypt(password)
-  
-      // Crear nuevo usuario
-      const newUser = new User({ name, surname, username, email, password: hashedPassword, phone, role })
-      await newUser.save()
-  
-      res.status(201).json({ success: true, message: "User registered successfully", user: newUser })
-    } catch (error) {
-      console.error("Registration error:", error)
-      res.status(500).json({ message: "Internal server error", error: error.message })
-    }
+export const registerUser = async (req, res) => {
+  try {
+    const { username, email, password, phone, role } = req.body
+
+    // Verificar si el usuario ya existe
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] })
+    if (existingUser) return res.status(400).json({ message: "User already exists" })
+
+    // Hashear la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    // Crear nuevo usuario
+    const newUser = new User({ username, email, password: hashedPassword, phone, role })
+    await newUser.save()
+
+    res.status(201).json({ success: true, message: "User registered successfully", user: newUser })
+  } catch (error) {
+    console.error("Registration error:", error)
+    res.status(500).json({ message: "Internal server error", error: error.message })
+  }
 }
+
   
 
 // Inicio de sesión
