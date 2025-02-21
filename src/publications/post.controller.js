@@ -4,7 +4,13 @@ import mongoose from 'mongoose'
 // Crear publicación (cualquier usuario registrado)
 export const createPost = async (req, res) => {
   try {
-    const newPost = new Post({ ...req.body, author: req.user._id })
+    const { category, title, content } = req.body
+
+    if (!mongoose.Types.ObjectId.isValid(category)) {
+      return res.status(400).json({ message: 'Invalid category ID' })
+    }
+
+    const newPost = new Post({ title, content, category, author: req.user._id })
     await newPost.save()
     res.status(201).json(newPost)
   } catch (err) {
@@ -15,7 +21,9 @@ export const createPost = async (req, res) => {
 // Obtener todas las publicaciones (público)
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find().populate('category').populate('author', 'username email')
+    const posts = await Post.find()
+      .populate('category', 'name')
+      .populate('author', 'username email')
     res.json(posts)
   } catch (err) {
     res.status(500).json({ message: 'Error retrieving posts', error: err.message })
@@ -25,7 +33,14 @@ export const getAllPosts = async (req, res) => {
 // Obtener publicación por ID (público)
 export const getPostById = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id).populate('category').populate('author', 'username email')
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid post ID format' })
+    }
+
+    const post = await Post.findById(req.params.id)
+      .populate('category', 'name')
+      .populate('author', 'username email')
+
     if (!post) return res.status(404).json({ message: 'Post not found' })
     res.json(post)
   } catch (err) {
@@ -36,6 +51,10 @@ export const getPostById = async (req, res) => {
 // Actualizar publicación (solo autor)
 export const updatePost = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid post ID format' })
+    }
+
     const post = await Post.findById(req.params.id)
     if (!post) return res.status(404).json({ message: 'Post not found' })
 
@@ -50,13 +69,17 @@ export const updatePost = async (req, res) => {
   }
 }
 
-// Eliminar publicación (solo autor)
+// Eliminar publicación (solo autor o ADMIN)
 export const deletePost = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid post ID format' })
+    }
+
     const post = await Post.findById(req.params.id)
     if (!post) return res.status(404).json({ message: 'Post not found' })
 
-    if (post.author.toString() !== req.user._id.toString()) {
+    if (post.author.toString() !== req.user._id.toString() && req.user.role !== 'ADMIN') {
       return res.status(403).json({ message: 'You can only delete your own posts' })
     }
 

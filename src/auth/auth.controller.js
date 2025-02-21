@@ -4,31 +4,31 @@ import jwt from "jsonwebtoken"
 import { encrypt, checkPassword } from "../../utils/encrypt.js"
 
 export const registerUser = async (req, res) => {
-    try {
+  try {
       const { name, surname, username, email, password, phone, role } = req.body
-  
+
       // Verificar si el usuario ya existe
       const existingUser = await User.findOne({ $or: [{ email }, { username }] })
       if (existingUser) return res.status(400).json({ message: "User already exists" })
-  
-      // Solo un ADMIN o SUPERADMIN pueden crear otro ADMIN
-      if (role === "ADMIN" && (!req.user || (req.user.role !== "ADMIN" && req.user.role !== "SUPERADMIN"))) {
-        return res.status(403).json({ message: "Only an ADMIN or SUPERADMIN can create another ADMIN" })
-      }
-  
+
       // Hashear la contraseña
       const hashedPassword = await encrypt(password)
-  
-      // Crear nuevo usuario
-      const newUser = new User({ name, surname, username, email, password: hashedPassword, phone, role })
+
+      // Permitir que los usuarios elijan ser ADMIN o CLIENT
+      const userRole = role || "CLIENT" // Si no envían un rol, se asigna "CLIENT" por defecto
+
+      // Crear nuevo usuario con el rol definido
+      const newUser = new User({ name, surname, username, email, password: hashedPassword, phone, role: userRole })
       await newUser.save()
-  
+
       res.status(201).json({ success: true, message: "User registered successfully", user: newUser })
-    } catch (error) {
+  } catch (error) {
       console.error("Registration error:", error)
       res.status(500).json({ message: "Internal server error", error: error.message })
-    }
-  }  
+  }
+}
+
+
 
 
 // Inicio de sesión

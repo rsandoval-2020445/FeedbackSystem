@@ -4,7 +4,7 @@ import User from '../src/users/user.model.js'
 
 export const validateJwt = async (req, res, next) => {
   try {
-    const secretKey = process.env.JWT_SECRET
+    const secretKey = process.env.SECRET_KEY
     if (!secretKey) {
       console.error('JWT_SECRET is missing.')
       return res.status(500).send({ message: 'Internal server error' })

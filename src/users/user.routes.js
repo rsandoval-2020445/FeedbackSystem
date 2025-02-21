@@ -1,13 +1,12 @@
-import { Router } from 'express'
-import { getAllUsers, getUserById, updateUser, updatePassword, deleteUser } from './user.controller.js'
-import { validateJwt } from '../../middlewares/validate.jwt.js'
+import express from "express"
+import { getAllUsers, getUserById, updateUser, deleteUser } from "./user.controller.js"
+import { validateJwt, isAdmin } from "../../middlewares/validate.jwt.js"
 
-const api = Router()
+const router = express.Router()
 
-api.get('/', getAllUsers)
-api.get('/:id', validateJwt, getUserById)
-api.put('/:id', validateJwt, updateUser)
-api.put('/:id/password', validateJwt, updatePassword)
-api.delete('/:id', validateJwt, deleteUser)
+router.get("/", validateJwt, getAllUsers)
+router.get("/:id", validateJwt, getUserById)
+router.put("/:id", validateJwt, updateUser)
+router.delete("/:id", validateJwt, isAdmin, deleteUser) // Solo ADMIN puede eliminar
 
-export default api
+export default router

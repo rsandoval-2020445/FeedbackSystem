@@ -7,7 +7,6 @@ import userRoutes from "../src/users/user.routes.js"
 import categoryRoutes from "../src/categories/category.routes.js"
 import postRoutes from "../src/publications/post.routes.js"
 import commentRoutes from "../src/comments/comment.routes.js"
-import { createSuperAdmin } from "../src/users/admin.setup.js"
 
 const configs = (app) => {
   app.use(express.json())
@@ -30,7 +29,6 @@ export const initServer = async () => {
   try {
     configs(app)
     routes(app)
-    await createSuperAdmin() // Crea al SuperAdmin si no existe
     app.listen(process.env.PORT, () => {
       console.log(`Server running on port ${process.env.PORT}`)
     })
