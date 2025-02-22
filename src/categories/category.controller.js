@@ -8,6 +8,11 @@ export const createCategory = async (req, res) => {
       return res.status(403).json({ message: 'Only admins can create categories' })
     }
 
+    const existingCategory = await Category.findOne({ name: req.body.name })
+    if (existingCategory) {
+      return res.status(400).json({ message: 'Category already exists' })
+    }
+
     const newCategory = new Category(req.body)
     await newCategory.save()
     res.status(201).json(newCategory)
@@ -29,6 +34,10 @@ export const getAllCategories = async (req, res) => {
 // Obtener categoría por ID (público)
 export const getCategoryById = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid category ID format' })
+    }
+
     const category = await Category.findById(req.params.id)
     if (!category) return res.status(404).json({ message: 'Category not found' })
     res.json(category)
@@ -40,6 +49,10 @@ export const getCategoryById = async (req, res) => {
 // Actualizar categoría (solo ADMIN)
 export const updateCategory = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid category ID format' })
+    }
+
     if (req.user.role !== 'ADMIN') {
       return res.status(403).json({ message: 'Only admins can update categories' })
     }
@@ -55,6 +68,10 @@ export const updateCategory = async (req, res) => {
 // Eliminar categoría (solo ADMIN)
 export const deleteCategory = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid category ID format' })
+    }
+
     if (req.user.role !== 'ADMIN') {
       return res.status(403).json({ message: 'Only admins can delete categories' })
     }

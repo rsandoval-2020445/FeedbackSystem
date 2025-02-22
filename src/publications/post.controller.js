@@ -1,4 +1,6 @@
 import Post from './post.model.js'
+import Comment from '../comments/comment.model.js'
+import Category from '../categories/category.model.js'
 import mongoose from 'mongoose'
 
 // Crear publicación (cualquier usuario registrado)
@@ -8,6 +10,11 @@ export const createPost = async (req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(category)) {
       return res.status(400).json({ message: 'Invalid category ID' })
+    }
+
+    const existingCategory = await Category.findById(category)
+    if (!existingCategory) {
+      return res.status(404).json({ message: 'Category not found' })
     }
 
     const newPost = new Post({ title, content, category, author: req.user._id })
@@ -69,7 +76,7 @@ export const updatePost = async (req, res) => {
   }
 }
 
-// Eliminar publicación (solo autor o ADMIN)
+// Eliminar publicación (autor o ADMIN) y sus comentarios
 export const deletePost = async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -83,8 +90,9 @@ export const deletePost = async (req, res) => {
       return res.status(403).json({ message: 'You can only delete your own posts' })
     }
 
+    await Comment.deleteMany({ post: req.params.id }) // Eliminar comentarios asociados
     await Post.findByIdAndDelete(req.params.id)
-    res.json({ message: 'Post deleted successfully' })
+    res.json({ message: 'Post and related comments deleted successfully' })
   } catch (err) {
     res.status(500).json({ message: 'Error deleting post', error: err.message })
   }

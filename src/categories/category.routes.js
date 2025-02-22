@@ -1,13 +1,13 @@
 import { Router } from 'express'
 import { createCategory, getAllCategories, getCategoryById, updateCategory, deleteCategory } from './category.controller.js'
-import { validateJwt } from '../../middlewares/validate.jwt.js'
+import { validateJwt, isAdmin } from '../../middlewares/validate.jwt.js'
 
-const api = Router()
+const router = Router()
 
-api.get('/', getAllCategories)
-api.get('/:id', getCategoryById)
-api.post('/', validateJwt, createCategory)
-api.put('/:id', validateJwt, updateCategory)
-api.delete('/:id', validateJwt, deleteCategory)
+router.post('/', validateJwt, isAdmin, createCategory)
+router.get('/', getAllCategories)
+router.get('/:id', getCategoryById)
+router.put('/:id', validateJwt, isAdmin, updateCategory)
+router.delete('/:id', validateJwt, isAdmin, deleteCategory)
 
-export default api
+export default router

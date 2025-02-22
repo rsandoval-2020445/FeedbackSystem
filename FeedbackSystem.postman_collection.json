@@ -7,140 +7,761 @@
 	},
 	"item": [
 		{
-			"name": "registerClient",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "{{token}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "name",
-							"value": "Raul",
-							"type": "text"
+			"name": "Auth",
+			"item": [
+				{
+					"name": "registerClient",
+					"request": {
+						"auth": {
+							"type": "noauth"
 						},
-						{
-							"key": "surname",
-							"value": "Del Cid",
-							"type": "text"
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Juan",
+									"type": "text"
+								},
+								{
+									"key": "surname",
+									"value": "Benito",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "jbenito",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "jbenito@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Password123!",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "41654345",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "CLIENT",
+									"type": "text"
+								}
+							]
 						},
-						{
-							"key": "username",
-							"value": "rdelcid",
-							"type": "text"
-						},
-						{
-							"key": "email",
-							"value": "rdelcid@gmail.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "Password123!",
-							"type": "text"
-						},
-						{
-							"key": "phone",
-							"value": "40918656",
-							"type": "text"
-						},
-						{
-							"key": "role",
-							"value": "ADMIN",
-							"type": "text"
+						"url": {
+							"raw": "localhost:3626/api/auth/register-client",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"auth",
+								"register-client"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "localhost:3626/api/auth/register",
-					"host": [
-						"localhost"
+				{
+					"name": "authLogin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);\r",
+									"postman.setGlobalVariable(\"token\", data.token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
 					],
-					"port": "3626",
-					"path": [
-						"api",
-						"auth",
-						"register"
-					]
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "jbenito@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Password123!",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3626/api/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "authLogin",
-			"event": [
+			"name": "Users",
+			"item": [
 				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
+					"name": "obtenerUsers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
 						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var data = JSON.parse(responseBody);\r",
-							"postman.setGlobalVariable(\"token\", data.token)"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "{{token}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "email",
-							"value": "superadmin@example.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "SuperAdmin123!",
-							"type": "text"
+						"url": {
+							"raw": "localhost:3626/api/users",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"users"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "localhost:3626/api/auth/login",
-					"host": [
-						"localhost"
-					],
-					"port": "3626",
-					"path": [
-						"api",
-						"auth",
-						"login"
-					]
+				{
+					"name": "obtenerUser",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3626/api/users/67b7d2d86040fd608c2483e4",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"users",
+								"67b7d2d86040fd608c2483e4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateUser",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Carlos",
+									"type": "text"
+								},
+								{
+									"key": "surname",
+									"value": "Hermoso",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "chermoso",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "chermoso@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "22331155",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3626/api/users/",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUser",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3626/api/users/",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePassword",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "oldPassword",
+									"value": "Password123!",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "Password321!",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3626/api/users/update-password",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"users",
+								"update-password"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "crearCategory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Cine y entretenimiento",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3626/api/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obtenerCategories",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3626/api/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obtenerCategory",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3626/api/categories/67b7f4553b8df559dd540076",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"categories",
+								"67b7f4553b8df559dd540076"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateCategory",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Cine y entretenimiento",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3626/api/categories/67b7f4553b8df559dd540076",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"categories",
+								"67b7f4553b8df559dd540076"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCategory",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3626/api/categories/67b7f4aa3b8df559dd54007a",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"categories",
+								"67b7f4aa3b8df559dd54007a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Publications",
+			"item": [
+				{
+					"name": "crearPost",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Quiero denunciar al Centro de Salud",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "67b7f4aa3b8df559dd54007a",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "Me pusieron una inyección vencida",
+									"type": "text"
+								},
+								{
+									"key": "comments",
+									"value": "ssss",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3626/api/posts",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obtenerPosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3626/api/posts",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obtenerPost",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3626/api/posts/67b7fde5c988730ed5ebf8f7",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"posts",
+								"67b7fde5c988730ed5ebf8f7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePost",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Mal comportamiento de las mascotas",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3626/api/posts/",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"posts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePost",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3626/api/posts/",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"posts",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "crearComment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "post",
+									"value": "67b7fde5c988730ed5ebf8f7",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "Porque las personas son malas",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3626/api/comments",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obtenerComment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3626/api/comments/67b7fde5c988730ed5ebf8f7",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"comments",
+								"67b7fde5c988730ed5ebf8f7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateComment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "content",
+									"value": "Comentario 2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3626/api/comments/67b7fe4bc988730ed5ebf8fb",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"comments",
+								"67b7fe4bc988730ed5ebf8fb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCommnet",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3626/api/comments/",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"api",
+								"comments",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

@@ -28,9 +28,6 @@ export const registerUser = async (req, res) => {
   }
 }
 
-
-
-
 // Inicio de sesión
 export const loginUser = async (req, res) => {
     try {

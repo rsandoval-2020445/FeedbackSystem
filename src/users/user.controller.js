@@ -72,10 +72,6 @@ export const updatePassword = async (req, res) => {
     const user = await User.findById(req.user._id)
     if (!user) return res.status(404).json({ message: "User not found" })
 
-    if (user.role === "SUPERADMIN" && req.user._id.toString() !== req.params.id) {
-      return res.status(403).json({ message: "SuperAdmin password cannot be changed by others" })
-    }
-
     const isMatch = await checkPassword(user.password, oldPassword)
     if (!isMatch) return res.status(400).json({ message: "Incorrect old password" })
 
